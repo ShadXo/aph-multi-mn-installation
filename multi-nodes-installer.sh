@@ -15,27 +15,27 @@ bash -ic "$(wget -4qO- -o- raw.githubusercontent.com/ShadXo/multi-mn-installatio
 '
 
 # Github user and project.
-GITHUB_REPO='dogecash/dogecash'
+GITHUB_REPO='apholding/apholding'
 # Display Name.
-DAEMON_NAME='DogeCash Core'
+DAEMON_NAME='APHolding Core'
 # Coin Ticker.
-TICKER='DOGE'
+TICKER='APH'
 # Binary base name.
-BIN_BASE='dogecash'
+BIN_BASE='apholding'
 # Directory.
-DIRECTORY='.dogecash'
+DIRECTORY='.apholding'
 # Conf File.
-CONF='dogecash.conf'
+CONF='apholding.conf'
 # Port.
-DEFAULT_PORT=56740
+DEFAULT_PORT=5662
 # Explorer URL.
-EXPLORER_URL='https://explorer.dogec.io/'
+EXPLORER_URL='http://explorer.apholding.org/'
 # Rate limit explorer.
 EXPLORER_SLEEP=1
 EXPLORER_PEERS='api/peer'
 EXPLORER_BLOCKCOUNT_OFFSET='+8'
 # Amount of Collateral needed.
-COLLATERAL=5000
+COLLATERAL=75000
 # Direct Daemon Download if github has no releases.
 DAEMON_DOWNLOAD=''
 # Blocktime in seconds.
@@ -60,28 +60,13 @@ USE_DROPBOX_ADDNODES=1
 DROPBOX_BOOTSTRAP='7rawf808f0hv9jg'
 # Dropbox blocks and chainstake folders.
 DROPBOX_BLOCKS_N_CHAINS='s4vy92sczk9c10s'
+GITHUB_BLOCKS_N_CHAINS='latest'
 ASCII_ART () {
 echo -e "\e[0m"
 clear 2> /dev/null
-cat << "DOGECASH"
-              ,.  | \
-             |: \ ; :\
-             :' ;\| ::\
-              \ : | `::\
-              _)  |   `:`.
-           ,'             |
-          /  _             \
-       _,'  (_)             `-
-   _,-'                        \,
-,-'                              `-;,
- `.______,-,----._                  ,/
-        / /,-';'  \               ,'/           ______   _____   ______ _______
-      ,',;-'-'_,--;             ,'E'            |     \ |     | |  ____ |______
-     ( /___,-'     `.         ,'G/              |_____/ |_____| |_____| |______
-      `'             )      ,'O /               _______ _______ _______ _     _
-                     \__ _,'D ,'                |       |_____| |______ |_____|
-                          `--'                  |_____  |     | ______| |     |
-DOGECASH
+cat << "APHOLDING"
+
+APHOLDING
 }
 
 # Discord User Info
@@ -94,7 +79,7 @@ while [[ ! -f ~/___mn.sh ]] || [[ $( grep -Fxc "# End of masternode setup script
 do
   rm -f ~/___mn.sh
   echo "Downloading Masternode Setup Script."
-  wget -4qo- raw.githubusercontent.com/ShadXo/multi-mn-installation/development/mcarper.sh -O ~/___mn.sh
+  wget -4qo- raw.githubusercontent.com/ShadXo/aph-multi-mn-installation/master/mcarper.sh -O ~/___mn.sh
   COUNTER=1
   if [[ "${COUNTER}" -gt 3 ]]
   then
