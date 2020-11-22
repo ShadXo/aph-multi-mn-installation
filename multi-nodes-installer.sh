@@ -9,7 +9,7 @@
 # Run this file
 
 ```
-bash -ic "$(wget -4qO- -o- raw.githubusercontent.com/ShadXo/multi-mn-installation/development/mcarper.sh)" ; source ~/.bashrc
+bash -ic "$(wget -4qO- -o- raw.githubusercontent.com/ShadXo/aph-multi-mn-installation/master/mcarper.sh)" ; source ~/.bashrc
 ```
 
 '
