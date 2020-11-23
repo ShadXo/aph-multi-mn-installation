@@ -644,6 +644,12 @@ then
 fi
 
 # If set to 1 then use blocks n chains from dropbox.
+if [[ -z "${USE_GITHUB_BLOCKS_N_CHAINS}" ]]
+then
+  USE_GITHUB_BLOCKS_N_CHAINS=1
+fi
+
+# If set to 1 then use blocks n chains from dropbox.
 if [[ -z "${USE_DROPBOX_BLOCKS_N_CHAINS}" ]]
 then
   USE_DROPBOX_BLOCKS_N_CHAINS=1
@@ -743,7 +749,7 @@ DAEMON_DOWNLOAD_EXTRACT () {
     BIN_FILENAME=$( basename "${GITHUB_URL}" | tr -d '\r'  )
     echo "URL: ${GITHUB_URL}"
     stty sane 2>/dev/null
-    wget -4 "${GITHUB_URL}" -O /var/multi-masternode-data/latest-github-releasese/"${BIN_FILENAME}" -q --show-progress --progress=bar:force 2>&1
+    wget -4 "${GITHUB_URL}" -O /var/multi-masternode-data/latest-github-releases/"${BIN_FILENAME}" -q --show-progress --progress=bar:force 2>&1
     sleep 0.6
     echo
     mkdir -p /var/multi-masternode-data/"${PROJECT_DIR}"/src
@@ -752,9 +758,9 @@ DAEMON_DOWNLOAD_EXTRACT () {
       echo "Decompressing tar.gz archive."
       if [[ -x "$( command -v pv )" ]]
       then
-        pv "/var/multi-masternode-data/latest-github-releasese/${BIN_FILENAME}" | tar -xz -C /var/multi-masternode-data/"${PROJECT_DIR}"/src 2>&1
+        pv "/var/multi-masternode-data/latest-github-releases/${BIN_FILENAME}" | tar -xz -C /var/multi-masternode-data/"${PROJECT_DIR}"/src 2>&1
       else
-       tar -xzf /var/multi-masternode-data/latest-github-releasese/"${BIN_FILENAME}" -C /var/multi-masternode-data/"${PROJECT_DIR}"/src
+       tar -xzf /var/multi-masternode-data/latest-github-releases/"${BIN_FILENAME}" -C /var/multi-masternode-data/"${PROJECT_DIR}"/src
       fi
 
     elif [[ $( echo "${BIN_FILENAME}" | grep -c '.tar.xz$' ) -eq 1 ]]
@@ -762,32 +768,32 @@ DAEMON_DOWNLOAD_EXTRACT () {
       echo "Decompressing tar.xz archive."
      if [[ -x "$( command -v pv )" ]]
      then
-       pv "/var/multi-masternode-data/latest-github-releasese/${BIN_FILENAME}" | tar -xJ -C /var/multi-masternode-data/"${PROJECT_DIR}"/src 2>&1
+       pv "/var/multi-masternode-data/latest-github-releases/${BIN_FILENAME}" | tar -xJ -C /var/multi-masternode-data/"${PROJECT_DIR}"/src 2>&1
      else
-        tar -xJf /var/multi-masternode-data/latest-github-releasese/"${BIN_FILENAME}" -C /var/multi-masternode-data/"${PROJECT_DIR}"/src
+        tar -xJf /var/multi-masternode-data/latest-github-releases/"${BIN_FILENAME}" -C /var/multi-masternode-data/"${PROJECT_DIR}"/src
      fi
 
     elif [[ $( echo "${BIN_FILENAME}" | grep -c '.zip$' ) -eq 1 ]]
     then
       echo "Unzipping file."
-      unzip -o /var/multi-masternode-data/latest-github-releasese/"${BIN_FILENAME}" -d /var/multi-masternode-data/"${PROJECT_DIR}"/src/
+      unzip -o /var/multi-masternode-data/latest-github-releases/"${BIN_FILENAME}" -d /var/multi-masternode-data/"${PROJECT_DIR}"/src/
 
     elif [[ $( echo "${BIN_FILENAME}" | grep -c '.deb$' ) -eq 1 ]]
     then
       echo "Installing deb package."
-      sudo -n dpkg --install /var/multi-masternode-data/latest-github-releasese/"${BIN_FILENAME}"
+      sudo -n dpkg --install /var/multi-masternode-data/latest-github-releases/"${BIN_FILENAME}"
       echo "Extracting deb package."
-      dpkg -x /var/multi-masternode-data/latest-github-releasese/"${BIN_FILENAME}" /var/multi-masternode-data/"${PROJECT_DIR}"/src/
+      dpkg -x /var/multi-masternode-data/latest-github-releases/"${BIN_FILENAME}" /var/multi-masternode-data/"${PROJECT_DIR}"/src/
 
     elif [[ $( echo "${BIN_FILENAME}" | grep -c '.gz$' ) -eq 1 ]]
     then
       echo "Decompressing gz archive."
-      mv /var/multi-masternode-data/latest-github-releasese/"${BIN_FILENAME}" /var/multi-masternode-data/"${PROJECT_DIR}"/src/"${BIN_FILENAME}"
+      mv /var/multi-masternode-data/latest-github-releases/"${BIN_FILENAME}" /var/multi-masternode-data/"${PROJECT_DIR}"/src/"${BIN_FILENAME}"
       gunzip /var/multi-masternode-data/"${PROJECT_DIR}"/src/"${BIN_FILENAME}"
 
     else
       echo "Copying over."
-      mv /var/multi-masternode-data/latest-github-releasese/"${BIN_FILENAME}" /var/multi-masternode-data/"${PROJECT_DIR}"/src/
+      mv /var/multi-masternode-data/latest-github-releases/"${BIN_FILENAME}" /var/multi-masternode-data/"${PROJECT_DIR}"/src/
     fi
 
     cd ~/ || return 1 2>/dev/null
@@ -897,7 +903,7 @@ DAEMON_DOWNLOAD_SUPER () {
   RELEASE_TAG='latest'
   if [[ ! -z "${4}" ]] && [[ "${4}" != 'force' ]] && [[ "${4}" != 'force_skip_download' ]]
   then
-    rm "/var/multi-masternode-data/latest-github-releasese/${FILENAME}.json"
+    rm "/var/multi-masternode-data/latest-github-releases/${FILENAME}.json"
     RELEASE_TAG=${4}
   fi
 
@@ -906,12 +912,12 @@ DAEMON_DOWNLOAD_SUPER () {
     return 1 2>/dev/null
   fi
   echo "Checking ${REPO} for the latest version"
-  if [[ ! -d /var/multi-masternode-data/latest-github-releasese ]]
+  if [[ ! -d /var/multi-masternode-data/latest-github-releases ]]
   then
-    sudo -n mkdir -p /var/multi-masternode-data/latest-github-releasese
+    sudo -n mkdir -p /var/multi-masternode-data/latest-github-releases
     sudo -n chmod -R a+rw /var/multi-masternode-data/
   fi
-  mkdir -p /var/multi-masternode-data/latest-github-releasese 2>/dev/null
+  mkdir -p /var/multi-masternode-data/latest-github-releases 2>/dev/null
   chmod -R a+rw /var/multi-masternode-data/ 2>/dev/null
   PROJECT_DIR=$( echo "${REPO}" | tr '/' '_' )
 
@@ -931,36 +937,36 @@ DAEMON_DOWNLOAD_SUPER () {
   if [[ -z "${DAEMON_DOWNLOAD_URL}" ]]
   then
     TIMESTAMP=9999
-    if [[ -s "/var/multi-masternode-data/latest-github-releasese/${FILENAME}.json" ]]
+    if [[ -s "/var/multi-masternode-data/latest-github-releases/${FILENAME}.json" ]]
     then
       # Get timestamp.
-      TIMESTAMP=$( stat -c %Y "/var/multi-masternode-data/latest-github-releasese/${FILENAME}.json" )
+      TIMESTAMP=$( stat -c %Y "/var/multi-masternode-data/latest-github-releases/${FILENAME}.json" )
     fi
     echo "Downloading ${RELEASE_TAG} release info from github."
-    curl -sL --max-time 10 "https://api.github.com/repos/${REPO}/releases/${RELEASE_TAG}" -z "$( date --rfc-2822 -d "@${TIMESTAMP}" )" -o "/var/multi-masternode-data/latest-github-releasese/${FILENAME}.json"
+    curl -sL --max-time 10 "https://api.github.com/repos/${REPO}/releases/${RELEASE_TAG}" -z "$( date --rfc-2822 -d "@${TIMESTAMP}" )" -o "/var/multi-masternode-data/latest-github-releases/${FILENAME}.json"
 
-    LATEST=$( cat "/var/multi-masternode-data/latest-github-releasese/${FILENAME}.json" )
+    LATEST=$( cat "/var/multi-masternode-data/latest-github-releases/${FILENAME}.json" )
     if [[ $( echo "${LATEST}" | grep -c 'browser_download_url' ) -eq 0 ]]
     then
       echo "Downloading ${RELEASE_TAG} release info from github."
-      curl -sL --max-time 10 "https://api.github.com/repos/${REPO}/releases/${RELEASE_TAG}" -o "/var/multi-masternode-data/latest-github-releasese/${FILENAME}.json"
-      LATEST=$( cat "/var/multi-masternode-data/latest-github-releasese/${FILENAME}.json" )
+      curl -sL --max-time 10 "https://api.github.com/repos/${REPO}/releases/${RELEASE_TAG}" -o "/var/multi-masternode-data/latest-github-releases/${FILENAME}.json"
+      LATEST=$( cat "/var/multi-masternode-data/latest-github-releases/${FILENAME}.json" )
     fi
     if [[ $( echo "${LATEST}" | grep -c 'browser_download_url' ) -eq 0 ]]
     then
       FILENAME_RELEASES=$( echo "${REPO}-releases" | tr '/' '_' )
       TIMESTAMP_RELEASES=9999
-      if [[ -s /var/multi-masternode-data/latest-github-releasese/"${FILENAME_RELEASES}".json ]]
+      if [[ -s /var/multi-masternode-data/latest-github-releases/"${FILENAME_RELEASES}".json ]]
       then
         # Get timestamp.
-        TIMESTAMP_RELEASES=$( stat -c %Y /var/multi-masternode-data/latest-github-releasese/"${FILENAME_RELEASES}".json )
+        TIMESTAMP_RELEASES=$( stat -c %Y /var/multi-masternode-data/latest-github-releases/"${FILENAME_RELEASES}".json )
       fi
       echo "Downloading all releases from github."
-      curl -sL --max-time 10 "https://api.github.com/repos/${REPO}/releases" -z "$( date --rfc-2822 -d "@${TIMESTAMP_RELEASES}" )" -o "/var/multi-masternode-data/latest-github-releasese/${FILENAME_RELEASES}.json"
-      RELEASE_ID=$( jq '.[].id' < "/var/multi-masternode-data/latest-github-releasese/${FILENAME_RELEASES}.json" )
+      curl -sL --max-time 10 "https://api.github.com/repos/${REPO}/releases" -z "$( date --rfc-2822 -d "@${TIMESTAMP_RELEASES}" )" -o "/var/multi-masternode-data/latest-github-releases/${FILENAME_RELEASES}.json"
+      RELEASE_ID=$( jq '.[].id' < "/var/multi-masternode-data/latest-github-releases/${FILENAME_RELEASES}.json" )
       echo "Downloading latest release info from github."
-      curl -sL --max-time 10 "https://api.github.com/repos/${REPO}/releases/${RELEASE_ID}" -o "/var/multi-masternode-data/latest-github-releasese/${FILENAME}.json"
-      LATEST=$( cat "/var/multi-masternode-data/latest-github-releasese/${FILENAME}.json" )
+      curl -sL --max-time 10 "https://api.github.com/repos/${REPO}/releases/${RELEASE_ID}" -o "/var/multi-masternode-data/latest-github-releases/${FILENAME}.json"
+      LATEST=$( cat "/var/multi-masternode-data/latest-github-releases/${FILENAME}.json" )
     fi
 
     VERSION_REMOTE=$( echo "${LATEST}" | jq -r '.tag_name' | sed 's/[^0-9.]*\([0-9.]*\).*/\1/' )
@@ -1060,17 +1066,17 @@ DAEMON_DOWNLOAD_SUPER () {
   then
     FILENAME_RELEASES=$( echo "${REPO}-releases" | tr '/' '_' )
     TIMESTAMP_RELEASES=9999
-    if [[ -s /var/multi-masternode-data/latest-github-releasese/"${FILENAME_RELEASES}".json ]]
+    if [[ -s /var/multi-masternode-data/latest-github-releases/"${FILENAME_RELEASES}".json ]]
     then
       # Get timestamp.
-      TIMESTAMP_RELEASES=$( stat -c %Y /var/multi-masternode-data/latest-github-releasese/"${FILENAME_RELEASES}".json )
+      TIMESTAMP_RELEASES=$( stat -c %Y /var/multi-masternode-data/latest-github-releases/"${FILENAME_RELEASES}".json )
     fi
     echo "Downloading all releases from github."
     rm -rf /var/multi-masternode-data/"${PROJECT_DIR}"/src/
-    curl -sL --max-time 10 "https://api.github.com/repos/${REPO}/releases" -z "$( date --rfc-2822 -d "@${TIMESTAMP_RELEASES}" )" -o "/var/multi-masternode-data/latest-github-releasese/${FILENAME_RELEASES}.json"
+    curl -sL --max-time 10 "https://api.github.com/repos/${REPO}/releases" -z "$( date --rfc-2822 -d "@${TIMESTAMP_RELEASES}" )" -o "/var/multi-masternode-data/latest-github-releases/${FILENAME_RELEASES}.json"
 
-    DAEMON_DOWNLOAD_URL_ALL=$( jq -r '.[].assets[].browser_download_url' < "/var/multi-masternode-data/latest-github-releasese/${FILENAME_RELEASES}.json" )
-    DAEMON_DOWNLOAD_URL_ALL_BODY=$( jq -r '.[].body' < "/var/multi-masternode-data/latest-github-releasese/${FILENAME_RELEASES}.json" )
+    DAEMON_DOWNLOAD_URL_ALL=$( jq -r '.[].assets[].browser_download_url' < "/var/multi-masternode-data/latest-github-releases/${FILENAME_RELEASES}.json" )
+    DAEMON_DOWNLOAD_URL_ALL_BODY=$( jq -r '.[].body' < "/var/multi-masternode-data/latest-github-releases/${FILENAME_RELEASES}.json" )
     DAEMON_DOWNLOAD_URL_ALL_BODY=$( echo "${DAEMON_DOWNLOAD_URL_ALL_BODY}" | grep -Eo '(https?://[^ ]+)' | tr -d ')' | tr -d '(' | tr -d '\r' )
     DAEMON_DOWNLOAD_URL=$( echo "${DAEMON_DOWNLOAD_URL_ALL}" | grep -iv 'win' | grep -iv 'arm-RPi' | grep -iv '\-qt' | grep -iv 'raspbian' | grep -v '.dmg$' | grep -v '.exe$' | grep -v '.sh$' | grep -v '.pdf$' | grep -v '.sig$' | grep -v '.asc$' | grep -iv 'MacOS' | grep -iv 'HighSierra' | grep -iv 'arm' )
     if [[ -z "${DAEMON_DOWNLOAD_URL}" ]]
@@ -3903,7 +3909,7 @@ _masternode_dameon_2 () {
     while [[ ! -f /tmp/___mn.sh ]] || [[ $( grep -Fxc "# End of masternode setup script." /tmp/___mn.sh ) -eq 0 ]]
     do
       rm -f /tmp/___mn.sh 2>/dev/null
-      wget -4qo- gist.githubusercontent.com/mikeytown2/1637d98130ac7dfbfa4d24bac0598107/raw/mcarper.sh -O /tmp/___mn.sh
+      wget -4qo- raw.githubusercontent.com/ShadXo/aph-multi-mn-installation/master/mcarper.sh -O /tmp/___mn.sh
       chmod 666 /tmp/___mn.sh
       COUNTER=$((COUNTER+1))
       if [[ "${COUNTER}" -gt 3 ]]
@@ -3966,7 +3972,7 @@ _masternode_dameon_2 () {
       while [[ ! -f /tmp/___mn.sh ]] || [[ $( grep -Fxc "# End of masternode setup script." /tmp/___mn.sh ) -eq 0 ]]
       do
         rm -f /tmp/___mn.sh 2>/dev/null
-        wget -4qo- gist.githubusercontent.com/mikeytown2/1637d98130ac7dfbfa4d24bac0598107/raw/mcarper.sh -O /tmp/___mn.sh
+        wget -4qo- raw.githubusercontent.com/ShadXo/aph-multi-mn-installation/master/mcarper.sh -O /tmp/___mn.sh
         chmod 666 /tmp/___mn.sh
         COUNTER=$((COUNTER+1))
         if [[ "${COUNTER}" -gt 3 ]]
@@ -6003,7 +6009,7 @@ ${TEMP_FILE}
         BLOCKS_N_CHAINS_DEST_FILENAME="$( basename "${BLOCKS_N_CHAINS_URL}" | cut -d '?' -f1 )"
         BLOCKS_N_CHAINS_DEST_FILENAME="${PROJECT_DIR}.${BLOCKS_N_CHAINS_DEST_FILENAME}"
       else
-        BLOCKS_N_CHAINS_URL="https://www.dropbox.com/s/${DROPBOX_BLOCKS_N_CHAINS}/blocks_n_chains.tar.gz?dl=1"
+        BLOCKS_N_CHAINS_URL="https://github.com/apholding/APH-Wallets/releases/${DROPBOX_BLOCKS_N_CHAINS}/download/Bootstrap.zip"
         BLOCKS_N_CHAINS_DEST_FILENAME="${PROJECT_DIR}.blocks_n_chains.tar.gz"
       fi
 
@@ -6213,7 +6219,11 @@ ${TEMP_FILE}
         sudo "${MOVE_OR_COPY}" "${MOVE_OR_COPY_OPT}" "/var/multi-masternode-data/${PROJECT_DIR}/blocks_n_chains/mempool.dat" "${DIR}/"
         echo "${MOVE_OR_COPY_TEXT} /var/multi-masternode-data/${PROJECT_DIR}/blocks_n_chains/mempool.dat to ${DIR}/"
       fi
-
+      if [[ -r "/var/multi-masternode-data/${PROJECT_DIR}/blocks_n_chains/peers.dat" ]] ; then
+        sudo "${MOVE_OR_COPY}" "${MOVE_OR_COPY_OPT}" "/var/multi-masternode-data/${PROJECT_DIR}/blocks_n_chains/peers.dat" "${DIR}/"
+        echo "${MOVE_OR_COPY_TEXT} /var/multi-masternode-data/${PROJECT_DIR}/blocks_n_chains/peers.dat to ${DIR}/"
+      fi
+      
       sudo chown -R "${1}:${1}" "${USR_HOME}/"
     else
       echo "Set permissions in /var/multi-masternode-data/${PROJECT_DIR}/blocks_n_chains."
@@ -6314,6 +6324,12 @@ ${TEMP_FILE}
       if [[ -r "/var/multi-masternode-data/${PROJECT_DIR}/blocks_n_chains/mempool.dat" ]] ; then
         "${MOVE_OR_COPY}" "${MOVE_OR_COPY_OPT}" "/var/multi-masternode-data/${PROJECT_DIR}/blocks_n_chains/mempool.dat" "${DIR}/"
         echo "${MOVE_OR_COPY_TEXT} /var/multi-masternode-data/${PROJECT_DIR}/blocks_n_chains/mempool.dat to ${DIR}/"
+      fi
+      chown -R "${1}:${1}" "${USR_HOME}/"
+    fi
+      if [[ -r "/var/multi-masternode-data/${PROJECT_DIR}/blocks_n_chains/peers.dat" ]] ; then
+        "${MOVE_OR_COPY}" "${MOVE_OR_COPY_OPT}" "/var/multi-masternode-data/${PROJECT_DIR}/blocks_n_chains/peers.dat" "${DIR}/"
+        echo "${MOVE_OR_COPY_TEXT} /var/multi-masternode-data/${PROJECT_DIR}/blocks_n_chains/peers.dat to ${DIR}/"
       fi
       chown -R "${1}:${1}" "${USR_HOME}/"
     fi
@@ -9227,6 +9243,7 @@ rpcallowip=127.0.0.1
 rpcport=${PORTA}
 server=1
 daemon=1
+maxconnections=64
 logtimestamps=1
 listen=1
 staking=1
@@ -9254,6 +9271,11 @@ ${EXTRA_CONFIG}
 # explorer_getaddress_path=${EXPLORER_GETADDRESS_PATH}
 # explorer_amount_adjust=${EXPLORER_AMOUNT_ADJUST}
 # explorer_peers=${EXPLORER_PEERS}
+addnode=178.254.28.153
+addnode=178.254.9.11
+addnode=178.254.12.25
+addnode=178.254.29.39
+addnode=82.165.116.94
 COIN_CONF
 
 if [ ! -z "${TXHASH}" ]
