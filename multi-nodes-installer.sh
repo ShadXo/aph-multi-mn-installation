@@ -15,7 +15,7 @@ bash -ic "$(wget -4qO- -o- raw.githubusercontent.com/ShadXo/aph-multi-mn-install
 '
 
 # Github user and project.
-GITHUB_REPO='apholding/apholding'
+GITHUB_REPO='apholding/APH-Wallets'
 # Display Name.
 DAEMON_NAME='APHolding Core'
 # Coin Ticker.
@@ -54,13 +54,13 @@ MASTERNODE_LIST='listmasternodes'
 # Tip Address.
 TIPS='DTu1fh3F6ujvEoZsqMtFZ31VFJzfkBeUpf'
 # Dropbox Addnodes.
-DROPBOX_ADDNODES='s0pdil1rehsy4fu'
-USE_DROPBOX_ADDNODES=1
+#DROPBOX_ADDNODES='s0pdil1rehsy4fu'
+#USE_DROPBOX_ADDNODES=1
 # Dropbox Bootstrap.
-DROPBOX_BOOTSTRAP='7rawf808f0hv9jg'
+#DROPBOX_BOOTSTRAP='7rawf808f0hv9jg'
 # Dropbox blocks and chainstake folders.
-DROPBOX_BLOCKS_N_CHAINS='s4vy92sczk9c10s'
-GITHUB_BLOCKS_N_CHAINS='latest'
+DROPBOX_BLOCKS_N_CHAINS='latest'
+#DROPBOX_BLOCKS_N_CHAINS='s4vy92sczk9c10s'
 ASCII_ART () {
 echo -e "\e[0m"
 clear 2> /dev/null
