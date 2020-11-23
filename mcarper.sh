@@ -2533,6 +2533,7 @@ ${ROOT_ENTRY}"
 fi
 
 if [[ "${DAEMON_BIN}" != "apollond" ]] && \
+  [[ "${DAEMON_BIN}" != "apholdingd" ]] && \
   [[ "${DAEMON_BIN}" != "dogecashd" ]] && \
   [[ "${DAEMON_BIN}" != "phonecoind" ]] && \
   [[ "${DAEMON_BIN}" != "blocknoded" ]] && \
