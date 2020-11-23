@@ -644,12 +644,6 @@ then
 fi
 
 # If set to 1 then use blocks n chains from dropbox.
-if [[ -z "${USE_GITHUB_BLOCKS_N_CHAINS}" ]]
-then
-  USE_GITHUB_BLOCKS_N_CHAINS=1
-fi
-
-# If set to 1 then use blocks n chains from dropbox.
 if [[ -z "${USE_DROPBOX_BLOCKS_N_CHAINS}" ]]
 then
   USE_DROPBOX_BLOCKS_N_CHAINS=1
